@@ -34,13 +34,15 @@ public class GreetingsController {
      *
      * @param name the name to greet
      * @return greeting text
+     * método greetingText padrão de início.
      */
+	/*
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String greetingText(@PathVariable String name) {
         return "Curso Spring Boot API: " + name + "!";
     }
-    
+    */
     @RequestMapping(value = "/mensagem/{msg}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String retornaMsg(@PathVariable String msg) {
