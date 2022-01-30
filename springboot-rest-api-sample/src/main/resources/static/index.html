@@ -18,34 +18,33 @@
 		<form action="" id="formCadUser">
 			<div class="row">
 				<div class="col-4">
-					<label for="id" class="form-label">Id</label> <input type="text"
-						class="form-control" id="id" placeholder="9999"
-						readonly="readonly">
+					<label for="id" class="form-label">Id</label> 
+					<input type="text" class="form-control" id="id" placeholder="9999" readonly="readonly">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<label for="nome" class="form-label">Nome</label> <input
-						type="text" class="form-control" id="nome"
-						placeholder="Nome completo">
+					<label for="nome" class="form-label">Nome</label> 
+					<input type="text" class="form-control" id="nome" placeholder="Nome completo">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<label for="idade" class="form-label">Idade</label> <input
-						type="number" class="form-control" id="idade" placeholder="99">
+					<label for="idade" class="form-label">Idade</label> 
+					<input type="number" class="form-control" id="idade" placeholder="99">
 				</div>
 			</div>
 			<br>
 			<div class="row">
 				<div class="col-4">
 					<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar</button>
+					<button type="button" class="btn btn-secondary" onclick="document.getElementById('formCadUser').reset();">Limpar</button>
 				</div>
 			</div>
 		</form>
 	</div>
 
-	<!-- jQuery -->
+	<!-- jQuery CDN -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<script
@@ -64,15 +63,18 @@
 			$.ajax({
 				method: "POST",
 				url: "salvar",
-				data:	JSON.stringif({id: id, nome: nome, idade: idade}),
+				data: JSON.stringify({id : id, nome : nome, idade : idade}),
 				contentType: "application/json; charset=utf-8",
 				success: function(response){
+					$("#id").val(response.id);
 					alert("Salvo com sucesso!");
 				}
 			}).fail(function (xhr, status, errorThrown){
 				alert("Erro ao salvar:" + xhr.responseText);
 			});
 		}
+		
+
 	</script>
 </body>
 </html>
