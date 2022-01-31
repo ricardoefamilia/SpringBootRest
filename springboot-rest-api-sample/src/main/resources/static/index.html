@@ -42,8 +42,9 @@
 					<button type="button" class="btn btn-success"
 						onclick="salvarUsuario()">Salvar</button>
 					<button type="button" class="btn btn-secondary"
-						onclick="document.getElementById('formCadUser').reset();">Limpar</button>
-					<button type="button" class="btn btn-info" data-bs-toggle="modal"
+						onclick="document.getElementById('formCadUser').reset();">Novo</button>
+					<button type="button" class="btn btn-danger" onclick="excluirUser()">Excluir</button></td>
+					<button type="button" class="btn btn-warning" data-bs-toggle="modal"
 						data-bs-target="#pesquisaUserModal">Pesquisar</button>
 				</div>
 			</div>
@@ -81,6 +82,7 @@
 								<th scope="col">Nome</th>
 								<th scope="col">Idade</th>
 								<th scope="col">Editar</th>
+								<th scope="col">Excluir</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -91,7 +93,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Fechar</button>
+						data-bs-dismiss="modal" onclick="apagarPesquisa()">Fechar</button>
 				</div>
 			</div>
 		</div>
@@ -144,10 +146,11 @@
 					success : function(response) {
 						$('#tabelaResultados > tbody > tr').remove();	
 						for (var i = 0; i < response.length; i++){
-							$('#tabelaResultados > tbody').append('<tr><td>'+ 
+							$('#tabelaResultados > tbody').append('<tr id="'+response[i].id+'"><td>'+ 
 									response[i].id +'</td><td>'+ response[i].nome 
 									+'</td><td>'+ response[i].idade +
-									'</td><td><button type="button" class="btn btn-primary" onclick="colocarEmEdicao('+response[i].id+')">Editar</button></td></tr>')
+									'</td><td><button type="button" class="btn btn-primary" onclick="colocarEmEdicao('+response[i].id+')">Editar</button></td>'+
+									'</td><td><button type="button" class="btn btn-danger" onclick="excluirUserId('+response[i].id+')">Excluir</button></td></tr>')
 						}
 					}
 				}).fail(function(xhr, status, errorThrown) {
@@ -171,6 +174,35 @@
 					alert("Erro ao buscar usuário pelo código:\n" + xhr.responseText);
 				});
 			}
+		}
+		
+		function excluirUserId(id){
+			if(id != null || id != 0){
+				if(confirm('Deseja excluir?')){
+					$.ajax({
+						method : "DELETE",
+						url : "delete",
+						data : "iduser=" + id,
+						success : function(response) {
+							$('#'+id).remove();
+							/*alert(response);*/
+						}
+					}).fail(function(xhr, status, errorThrown) {
+						alert("Erro ao excluir usuário pelo código:\n" + xhr.responseText);
+					});
+				}
+			}
+		}
+		
+		function apagarPesquisa(){
+			$('#nomeBusca').val('');
+			$('#tabelaResultados > tbody > tr').remove();
+		}
+		
+		function excluirUser(){
+			var id = $('#id').val();
+			excluirUserId(id);
+			document.getElmentById('formCadUser').reset();
 		}
 	</script>
 </body>
