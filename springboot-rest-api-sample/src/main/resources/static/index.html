@@ -130,25 +130,45 @@
 					alert("Salvo com sucesso!");
 				}
 			}).fail(function(xhr, status, errorThrown) {
-				alert("Erro ao salvar:" + xhr.responseText);
+				alert("Erro ao salvar:\n" + xhr.responseText);
 			});
 		}
 		
 		function pesquisarUsuarios(){
 			var nome = $("#nomeBusca").val();
-			if(nome != null && nome.trim() !=''){
+			if(nome != null && nome.trim() != ''){
 				$.ajax({
 					method : "GET",
 					url : "buscarUserPorNome",
-					data : "name=" + nome,
+					data : "nome=" + nome,
 					success : function(response) {
-						$('#tabelaResultados > tbody > tr').remove();						
-						for (var i = 0; i < response.lenght; i++){
-							$('#tabelaResultados > tbody').append('<tr><td>'+ response[i].id +'</td><td>'+ response[i].nome +'</td><td>'+ response[i].idade +'</td></tr>')
+						$('#tabelaResultados > tbody > tr').remove();	
+						for (var i = 0; i < response.length; i++){
+							$('#tabelaResultados > tbody').append('<tr><td>'+ 
+									response[i].id +'</td><td>'+ response[i].nome 
+									+'</td><td>'+ response[i].idade +
+									'</td><td><button type="button" class="btn btn-primary" onclick="colocarEmEdicao('+response[i].id+')">Editar</button></td></tr>')
 						}
 					}
 				}).fail(function(xhr, status, errorThrown) {
-					alert("Erro ao buscar usuário:" + xhr.responseText);
+					alert("Erro ao buscar usuário pelo nome:\n" + xhr.responseText);
+				});
+			}
+		}
+		
+		function colocarEmEdicao(id){
+			if(id != null || id != 0){
+				$.ajax({
+					method : "GET",
+					url : "buscauserporid",
+					data : "iduser=" + id,
+					success : function(response) {
+						$('#id').val(response.id);
+						$('#nome').val(response.nome);
+						$('#idade').val(response.idade);
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao buscar usuário pelo código:\n" + xhr.responseText);
 				});
 			}
 		}
