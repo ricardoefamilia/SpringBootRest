@@ -18,34 +18,90 @@
 		<form action="" id="formCadUser">
 			<div class="row">
 				<div class="col-4">
-					<label for="id" class="form-label">Id</label> 
-					<input type="text" class="form-control" id="id" placeholder="9999" readonly="readonly">
+					<label for="id" class="form-label">Código</label> <input
+						type="text" class="form-control" id="id" placeholder="9999"
+						readonly="readonly">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<label for="nome" class="form-label">Nome</label> 
-					<input type="text" class="form-control" id="nome" placeholder="Nome completo">
+					<label for="nome" class="form-label">Nome</label> <input
+						type="text" class="form-control" id="nome"
+						placeholder="Nome completo">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<label for="idade" class="form-label">Idade</label> 
-					<input type="number" class="form-control" id="idade" placeholder="99">
+					<label for="idade" class="form-label">Idade</label> <input
+						type="number" class="form-control" id="idade" placeholder="99">
 				</div>
 			</div>
 			<br>
 			<div class="row">
 				<div class="col-4">
-					<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar</button>
-					<button type="button" class="btn btn-secondary" onclick="document.getElementById('formCadUser').reset();">Limpar</button>
+					<button type="button" class="btn btn-success"
+						onclick="salvarUsuario()">Salvar</button>
+					<button type="button" class="btn btn-secondary"
+						onclick="document.getElementById('formCadUser').reset();">Limpar</button>
+					<button type="button" class="btn btn-info" data-bs-toggle="modal"
+						data-bs-target="#pesquisaUserModal">Pesquisar</button>
 				</div>
 			</div>
 		</form>
 	</div>
 
+
+	<!-- MODAL -->
+	<div class="modal fade" id="pesquisaUserModal" tabindex="-1"
+		aria-labelledby="pesquisaUserModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="pesquisaUserModalLabel">Pesquisa
+						de Usuário</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="nome" class="form-label">Nome</label> <input
+								type="text" class="form-control" id="nomeBusca"
+								placeholder="Nome completo">
+						</div>
+						<div class="mb-3">
+							<button type="button" class="btn btn-success" onclick="pesquisarUsuarios()">Buscar</button>
+						</div>
+					</form>
+
+					<table class="table table-striped table-hover" id="tabelaResultados">
+						<thead>
+							<tr>
+								<th scope="col">Código</th>
+								<th scope="col">Nome</th>
+								<th scope="col">Idade</th>
+								<th scope="col">Editar</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Fim do Modal -->
+
 	<!-- jQuery CDN -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+		crossorigin="anonymous"></script>
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -54,27 +110,48 @@
 
 	<!-- scripts diversos -->
 	<script>
-		function salvarUsuario(){
+		function salvarUsuario() {
 			var id = $("#id").val();
 			var nome = $("#nome").val();
-			var idade = $("#idade").val();			
+			var idade = $("#idade").val();
 			/*alert(nome);*/
-			
+
 			$.ajax({
-				method: "POST",
-				url: "salvar",
-				data: JSON.stringify({id : id, nome : nome, idade : idade}),
-				contentType: "application/json; charset=utf-8",
-				success: function(response){
+				method : "POST",
+				url : "salvar",
+				data : JSON.stringify({
+					id : id,
+					nome : nome,
+					idade : idade
+				}),
+				contentType : "application/json; charset=utf-8",
+				success : function(response) {
 					$("#id").val(response.id);
 					alert("Salvo com sucesso!");
 				}
-			}).fail(function (xhr, status, errorThrown){
+			}).fail(function(xhr, status, errorThrown) {
 				alert("Erro ao salvar:" + xhr.responseText);
 			});
 		}
 		
-
+		function pesquisarUsuarios(){
+			var nome = $("#nomeBusca").val();
+			if(nome != null && nome.trim() !=''){
+				$.ajax({
+					method : "GET",
+					url : "buscarUserPorNome",
+					data : "name=" + nome,
+					success : function(response) {
+						$('#tabelaResultados > tbody > tr').remove();						
+						for (var i = 0; i < response.lenght; i++){
+							$('#tabelaResultados > tbody').append('<tr><td>'+ response[i].id +'</td><td>'+ response[i].nome +'</td><td>'+ response[i].idade +'</td></tr>')
+						}
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao buscar usuário:" + xhr.responseText);
+				});
+			}
+		}
 	</script>
 </body>
 </html>
